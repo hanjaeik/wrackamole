@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     private Runnable moleRunnable;
     private ObjectAnimator moleAnimator;
     private MediaPlayer hitSound;
+    private Timer gameTimer;
+    private TextView timerTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,23 @@ public class MainActivity extends AppCompatActivity {
 
         hitSound = MediaPlayer.create(this, R.raw.hit_sound);
 
+        timerTextView = findViewById(R.id.timerTextView);
+
+        // Timer 클래스를 사용하여 20초 동안의 타이머 설정
+        gameTimer = new Timer(20000);
+        gameTimer.setOnTimerTickListener(new Timer.OnTimerTickListener() {
+            @Override
+            public void onTick(long timeLeft) {
+                updateTimerUI(timeLeft);
+            }
+
+            @Override
+            public void onFinish() {
+                // 게임 종료 또는 추가적인 로직 수행
+                showGameOverDialog();
+            }
+        });
+
         moleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 showMole();
+                gameTimer.start(); // 게임 시작 시 타이머 시작
             }
         }, 1000); // 1초 후에 두더지를 보이게 함
     }
@@ -82,12 +103,19 @@ public class MainActivity extends AppCompatActivity {
     private void hitMole() {
         hitSound.start(); // 사운드 재생
         hideMole(); // 두더지 숨기기
-
     }
 
     private int getRandomCoordinate() {
         Random random = new Random();
         return random.nextInt(500); // 적절한 범위로 수정
+    }
+
+    private void updateTimerUI(long timeLeft) {
+        timerTextView.setText(getString(R.string.timer_format, timeLeft / 1000));
+    }
+
+    private void showGameOverDialog() {
+        // 게임 종료 다이얼로그를 표시하는 로직 추가
     }
 
     @Override
