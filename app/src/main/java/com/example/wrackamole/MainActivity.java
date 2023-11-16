@@ -3,8 +3,8 @@ package com.example.wrackamole;
 import android.animation.ObjectAnimator;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,8 +20,10 @@ public class MainActivity extends AppCompatActivity {
     private Runnable moleRunnable;
     private ObjectAnimator moleAnimator;
     private MediaPlayer hitSound;
-    private Timer gameTimer;
+    private CountDownTimer gameTimer;
     private TextView timerTextView;
+    private int baseMoleShowDelay = 2000; // 두더지가 나타나는 기본 시간 간격
+    private int currentMoleShowDelay = baseMoleShowDelay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +48,11 @@ public class MainActivity extends AppCompatActivity {
 
         timerTextView = findViewById(R.id.timerTextView);
 
-        // Timer 클래스를 사용하여 20초 동안의 타이머 설정
-        gameTimer = new Timer(20000);
-        gameTimer.setOnTimerTickListener(new Timer.OnTimerTickListener() {
+        // CountDownTimer 클래스를 사용하여 20초 동안의 타이머 설정
+        gameTimer = new CountDownTimer(20000, 1000) {
             @Override
-            public void onTick(long timeLeft) {
-                updateTimerUI(timeLeft);
+            public void onTick(long millisUntilFinished) {
+                updateTimerUI(millisUntilFinished);
             }
 
             @Override
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 // 게임 종료 또는 추가적인 로직 수행
                 showGameOverDialog();
             }
-        });
+        };
 
         moleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,8 +90,9 @@ public class MainActivity extends AppCompatActivity {
         moleImageView.setX(randomX);
         moleImageView.setY(randomY);
 
+        moleAnimator.setDuration(currentMoleShowDelay); // 현재 난이도에 맞게 애니메이션 속도 조절
         moleAnimator.start(); // 애니메이션 시작
-        handler.postDelayed(moleRunnable, 2000); // 2초 후에 두더지를 숨기기
+        handler.postDelayed(moleRunnable, currentMoleShowDelay); // 현재 난이도에 맞게 두더지를 숨기기
     }
 
     private void hideMole() {
@@ -110,24 +112,30 @@ public class MainActivity extends AppCompatActivity {
         return random.nextInt(500); // 적절한 범위로 수정
     }
 
-    private void updateTimerUI(long timeLeft) {
-        timerTextView.setText(getString(R.string.timer_format, timeLeft / 1000));
+    private void updateTimerUI(long millisUntilFinished) {
+        timerTextView.setText(getString(R.string.timer_format, millisUntilFinished / 1000));
+
+        // 난이도 조절: 시간이 지날수록 두더지가 나타나는 시간 간격을 줄임
+        if (currentMoleShowDelay > 500) {
+            currentMoleShowDelay -= 10;
+        }
     }
 
     private void showGameOverDialog() {
-        AlertDialogManager.showGameOverDialog(this, gameTimer.getElapsedTime(), new AlertDialogManager.OnOptionSelectedListener() {
-            @Override
-            public void onRestartSelected() {
-                gameTimer.reset(); // 타이머 리셋
-                startGame();
-            }
 
-            @Override
-            public void onExitSelected() {
-                finish(); // 앱 종료
-            }
-        });
-        gameTimer.stop(); // 타이머 정지
+         AlertDialogManager.showGameOverDialog(this, gameTimer.getElapsedTime(), new AlertDialogManager.OnOptionSelectedListener() {
+             @Override
+             public void onRestartSelected() {
+                 gameTimer.reset(); // 타이머 리셋
+                 startGame();
+             }
+
+           @Override
+             public void onExitSelected() {
+                 finish(); // 앱 종료
+             }
+         });
+         gameTimer.stop(); // 타이머 정지
     }
 
     @Override
