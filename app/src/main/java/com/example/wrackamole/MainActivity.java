@@ -115,7 +115,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showGameOverDialog() {
-        // 게임 종료 다이얼로그를 표시하는 로직 추가
+        AlertDialogManager.showGameOverDialog(this, gameTimer.getElapsedTime(), new AlertDialogManager.OnOptionSelectedListener() {
+            @Override
+            public void onRestartSelected() {
+                gameTimer.reset(); // 타이머 리셋
+                startGame();
+            }
+
+            @Override
+            public void onExitSelected() {
+                finish(); // 앱 종료
+            }
+        });
+        gameTimer.stop(); // 타이머 정지
     }
 
     @Override
