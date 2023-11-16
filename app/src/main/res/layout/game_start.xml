@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#4CAF50"
+    tools:context=".game_start">
+
+    <ImageView
+
+        android:id="@+id/moleImageView"
+        android:layout_width="264dp"
+        android:layout_height="341dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/mole" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="두더지 잡기"
+        android:textColor="#00FFC2"
+        android:textSize="50dp"
+        android:fontFamily="sans-serif-light"
+        android:shadowColor="#303030"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="3"
+        android:textStyle="bold"
+        android:background="#00000000"
+        android:padding="10dp"
+        android:roundedCorner="8dp" />
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/button"
+        android:onClick="startGame"
+        android:text="미션 시작"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <?xml version="1.0" encoding="utf-8"?>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,15 +14,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Wrackamole"
         tools:targetApi="31">
+
         <activity
-            android:name=".MainActivity"
+            android:name=".game_start"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- 이곳에 GameProcess1 추가 -->
+        <activity android:name=".game_process" />
+
     </application>
 
 </manifest>
