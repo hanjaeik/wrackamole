@@ -1,113 +1,174 @@
 package com.example.wrackamole;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Random;
 
 public class game_process extends AppCompatActivity {
 
-    private int score;
+    private ImageView moleImageView;
     private TextView scoreTextView;
-    private ImageView[] moleImageViews, moleExplosionViews;
+    private int score = 0;
+    private int moleCount = 0;
+    private Handler handler = new Handler();
+    private int[] holeIds = {
+            R.id.firstHoleImageView,
+            R.id.secondHoleImageView,
+            R.id.thirdHoleImageView,
+            R.id.fourthHoleImageView,
+            R.id.fifthHoleImageView,
+            R.id.sixthHoleImageView
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.game_process1);
+        setContentView(R.layout.game_process);
 
-        // XML에서 정의한 뷰들을 찾아와서 변수에 할당
+        moleImageView = findViewById(R.id.moleImageView);
         scoreTextView = findViewById(R.id.scoreTextView);
 
-        // 두더지 이미지뷰와 폭발 이미지뷰들을 배열로 찾아와서 변수에 할당
-        moleImageViews = new ImageView[]{
-                findViewById(R.id.moleImageView1),
-                findViewById(R.id.moleImageView2),
-                findViewById(R.id.moleImageView3),
-                findViewById(R.id.moleImageView4),
-                findViewById(R.id.moleImageView5),
-                findViewById(R.id.moleImageView6)
-        };
+        // 초기에는 mole_empty.png로 설정
+        moleImageView.setImageResource(R.drawable.mole_empty);
 
-        moleExplosionViews = new ImageView[]{
-                findViewById(R.id.moleExplosion1),
-                findViewById(R.id.moleExplosion2),
-                findViewById(R.id.moleExplosion3),
-                findViewById(R.id.moleExplosion4),
-                findViewById(R.id.moleExplosion5),
-                findViewById(R.id.moleExplosion6)
-        };
+        // 제한 시간을 60초로 설정하는 카운트다운 타이머
+        new CountDownTimer(60000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                // 남은 시간을 초 단위로 표시
+                int secondsLeft = (int) (millisUntilFinished / 1000);
+                updateScoreAndTime(secondsLeft);
+            }
 
-        // 초기 점수 설정
-        score = 0;
-        updateScore();
+            public void onFinish() {
+                // 게임 종료 시 동작
+                endGame();
+            }
+        }.start();
 
-        // 게임 로직 시작
-        startGameLogic();
-    }
-
-    private void startGameLogic() {
-        final Handler handler = new Handler();
+        // 초기에는 두더지가 나오기 전까지의 대기 시간을 설정
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // 두더지가 나타날 때의 동작을 구현
-                for (int i = 0; i < moleImageViews.length; i++) {
-                    showMole(moleImageViews[i], moleExplosionViews[i]);
-                }
-
-                // 1초 후에 다시 두더지를 숨기는 동작을 구현
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (int i = 0; i < moleImageViews.length; i++) {
-                            hideMole(moleImageViews[i], moleExplosionViews[i]);
-                        }
-
-                        // 재귀적으로 계속해서 실행 (1초마다)
-                        handler.postDelayed(this, 1000);
-                    }
-                }, 1000);
+                simulateMoleHiding();
             }
-        }, 1000);
-    }
-}
+        }, getRandomTime());
 
-    private void hideMole(final ImageView moleImageView, final ImageView moleExplosionView) {
-        moleImageView.setVisibility(View.INVISIBLE);
-        moleExplosionView.setVisibility(View.INVISIBLE);
-    }
-
-    private void showMole(final ImageView moleImageView, final ImageView moleExplosionView) {
-        moleImageView.setVisibility(View.VISIBLE);
-        moleImageView.setOnClickListener(new View.OnClickListener() {
+        moleImageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                // 두더지를 클릭했을 때의 동작을 구현
-                score++;
-                updateScore();
-                showExplosion(moleExplosionView); // 클릭 후에는 폭발 이미지를 표시
-                hideMole(moleImageView, moleExplosionView); // 클릭 후에는 두더지를 숨김
+            public boolean onTouch(View v, MotionEvent event) {
+                // 터치 이벤트 처리
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // 두더지를 터치했을 때의 동작을 여기에 구현
+                        // 예를 들어, 두더지가 잡혔을 때 다른 이미지로 변경
+                        moleImageView.setImageResource(R.drawable.mole_hurt);
+
+                        // 두더지가 잡히면 100점 추가
+                        score += 100;
+
+                        // 두더지가 잡힌 횟수 증가
+                        moleCount++;
+
+                        // 점수를 업데이트
+                        updateScoreAndTime(60); // 남은 시간은 60초로 고정
+
+                        // 두더지가 잡힌 후 2초 동안 기다린 후 다시 숨게 설정
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                simulateMoleHiding();
+                            }
+                        }, 2000);
+
+                        // 만약 두더지를 10번 잡으면 게임 종료
+                        if (moleCount >= 10) {
+                            endGame();
+                        }
+                        break;
+                }
+                return true;
             }
         });
     }
 
-    private void showExplosion(final ImageView moleExplosionView) {
-        moleExplosionView.setVisibility(View.VISIBLE);
+    // 게임 종료 처리
+    private void endGame() {
+        Intent intent = new Intent(this, game_end.class);
+        intent.putExtra("finalScore", score);
+        startActivity(intent);
 
-        // 0.5초 후에 폭발 이미지를 다시 숨김
-        new Handler().postDelayed(new Runnable() {
+        // game_start 액티비티를 시작하고 싶다면 아래와 같이 사용
+        Intent gameStartIntent = new Intent(this, game_start.class);
+        startActivity(gameStartIntent);
+        // 토스트 메시지로 게임 종료를 알림
+        Toast.makeText(this, "게임 종료! 최종 점수: " + score, Toast.LENGTH_SHORT).show();
+
+        // 액티비티를 종료하거나 다음 화면으로 이동할 수 있습니다.
+        finish();
+    }
+
+    // 두더지가 숨는 동작을 시뮬레이션하는 메서드
+    private void simulateMoleHiding() {
+        // 랜덤한 위치로 두더지를 나타나게 설정
+        showMoleImage();
+    }
+
+
+    private void showMoleImage() {
+        // 두더지가 나타나는 시간 간격을 2초로 설정
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                moleExplosionView.setVisibility(View.INVISIBLE);
+                hideMoleImage();
             }
-        }, 500);
+        }, 2000);
     }
 
-    private void updateScore() {
-        scoreTextView.setText("Score: " + score);
+    // 두더지 이미지를 숨기는 메서드
+    private void hideMoleImage() {
+        // 현재 표시할 이미지를 mole_empty로 변경
+        int currentMoleImage = R.drawable.mole_empty;
+
+        // 두더지 이미지를 두더지가 숨는 이미지로 변경
+        moleImageView.setImageResource(currentMoleImage);
+
+        // 두더지가 잡힌 후 2초 동안 기다린 후 다시 나오게 설정
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showMoleImage();
+            }
+        }, 2000); // 2초 동안 기다리도록 설정
+    }
+
+    // 랜덤으로 첫 번째에서 여섯 번째 굴 중 하나를 선택하는 메서드
+    private int getRandomHoleIndex() {
+        Random random = new Random();
+        return random.nextInt(holeIds.length);
+    }
+
+    // 랜덤한 시간 간격을 반환하는 메서드
+    private int getRandomTime() {
+        Random random = new Random();
+        return random.nextInt(5000) + 1000; // 1000ms ~ 6000ms 사이의 랜덤한 값
+    }
+
+    // 점수와 시간을 업데이트하는 메서드
+    private void updateScoreAndTime(final int secondsLeft) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                scoreTextView.setText("Score: " + score + " | Time: " + secondsLeft + "s");
+            }
+        });
     }
 }
-

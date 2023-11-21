@@ -3,34 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4CAF50"
+    android:background="@drawable/mole_background"
     tools:context=".game_start">
 
     <ImageView
-
         android:id="@+id/moleImageView"
-        android:layout_width="264dp"
-        android:layout_height="341dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/mole" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:text="두더지 잡기"
-        android:textColor="#00FFC2"
-        android:textSize="50dp"
-        android:fontFamily="sans-serif-light"
-        android:shadowColor="#303030"
-        android:shadowDx="2"
-        android:shadowDy="2"
-        android:shadowRadius="3"
-        android:textStyle="bold"
-        android:background="#00000000"
-        android:padding="10dp"
-        android:roundedCorner="8dp" />
+        android:src="@drawable/mole"
+        android:contentDescription="두더지 이미지" />
 
     <Button
         android:id="@+id/startButton"
