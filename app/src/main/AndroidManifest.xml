@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <?xml version="1.0" encoding="utf-8"?>
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.wrackamole">
 
     <application
         android:allowBackup="true"
@@ -24,8 +23,8 @@
             </intent-filter>
         </activity>
 
-        <!-- 이곳에 GameProcess1 추가 -->
         <activity android:name=".game_process" />
+        <activity android:name=".game_end" />
 
     </application>
 

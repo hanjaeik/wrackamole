@@ -19,14 +19,24 @@ public class game_process extends AppCompatActivity {
     private TextView scoreTextView;
     private int score = 0;
     private int moleCount = 0;
-    private Handler handler = new Handler();
-    private int[] holeIds = {
-            R.id.firstHoleImageView,
-            R.id.secondHoleImageView,
-            R.id.thirdHoleImageView,
-            R.id.fourthHoleImageView,
-            R.id.fifthHoleImageView,
-            R.id.sixthHoleImageView
+    private Handler handler;
+
+    {
+        handler = new Handler();
+    }
+
+    // 두더지 이미지 리소스 ID 배열
+    private int[] moleImageIds = {
+            R.drawable.mole1,
+            R.drawable.mole2,
+            R.drawable.mole3,
+    };
+
+    // 두더지가 잡힌 이미지 리소스 ID 배열
+    private int[] moleHurtImageIds = {
+            R.drawable.mole_hurt,
+            R.drawable.mole_hurt,
+            R.drawable.mole_hurt
     };
 
     @Override
@@ -36,9 +46,6 @@ public class game_process extends AppCompatActivity {
 
         moleImageView = findViewById(R.id.moleImageView);
         scoreTextView = findViewById(R.id.scoreTextView);
-
-        // 초기에는 mole_empty.png로 설정
-        moleImageView.setImageResource(R.drawable.mole_empty);
 
         // 제한 시간을 60초로 설정하는 카운트다운 타이머
         new CountDownTimer(60000, 1000) {
@@ -85,6 +92,7 @@ public class game_process extends AppCompatActivity {
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
+
                                 simulateMoleHiding();
                             }
                         }, 2000);
@@ -124,6 +132,10 @@ public class game_process extends AppCompatActivity {
 
 
     private void showMoleImage() {
+        int randomImageIndex = getRandomImageIndex();
+        moleImageView.setImageResource(moleImageIds[randomImageIndex]);
+        moleImageView.setVisibility(View.VISIBLE);
+
         // 두더지가 나타나는 시간 간격을 2초로 설정
         handler.postDelayed(new Runnable() {
             @Override
@@ -131,15 +143,18 @@ public class game_process extends AppCompatActivity {
                 hideMoleImage();
             }
         }, 2000);
+    }// getRandomHoleIndex() 메서드 수정
+
+    // 랜덤으로 두더지가 나타나는 메서드
+    private int getRandomImageIndex() {
+        Random random = new Random();
+        return random.nextInt(moleImageIds.length);
     }
 
     // 두더지 이미지를 숨기는 메서드
     private void hideMoleImage() {
-        // 현재 표시할 이미지를 mole_empty로 변경
-        int currentMoleImage = R.drawable.mole_empty;
-
-        // 두더지 이미지를 두더지가 숨는 이미지로 변경
-        moleImageView.setImageResource(currentMoleImage);
+        // 두더지 이미지를 숨기고 두더지가 잡힌 후 2초 동안 기다린 후 다시 나오게 설정
+        moleImageView.setVisibility(View.INVISIBLE);
 
         // 두더지가 잡힌 후 2초 동안 기다린 후 다시 나오게 설정
         handler.postDelayed(new Runnable() {
@@ -148,12 +163,6 @@ public class game_process extends AppCompatActivity {
                 showMoleImage();
             }
         }, 2000); // 2초 동안 기다리도록 설정
-    }
-
-    // 랜덤으로 첫 번째에서 여섯 번째 굴 중 하나를 선택하는 메서드
-    private int getRandomHoleIndex() {
-        Random random = new Random();
-        return random.nextInt(holeIds.length);
     }
 
     // 랜덤한 시간 간격을 반환하는 메서드

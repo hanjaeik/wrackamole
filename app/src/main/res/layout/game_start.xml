@@ -11,7 +11,7 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/mole"
+        android:src="@drawable/mole1"
         android:contentDescription="두더지 이미지" />
 
     <Button
