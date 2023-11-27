@@ -7,11 +7,21 @@
     tools:context=".game_process">
 
     <ImageView
-        android:id="@+id/moleImageView"
+        android:id="@+id/moleImageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:src="@drawable/mole1"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/moleImageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="333dp"
+        android:src="@drawable/mole2"
         android:visibility="invisible" />
 
     <TextView

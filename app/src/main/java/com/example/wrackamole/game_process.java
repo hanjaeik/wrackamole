@@ -15,7 +15,8 @@ import java.util.Random;
 
 public class game_process extends AppCompatActivity {
 
-    private ImageView moleImageView;
+    private ImageView moleImageView1;
+    private ImageView moleImageView2;
     private TextView scoreTextView;
     private int score = 0;
     private int moleCount = 0;
@@ -29,14 +30,11 @@ public class game_process extends AppCompatActivity {
     private int[] moleImageIds = {
             R.drawable.mole1,
             R.drawable.mole2,
-            R.drawable.mole3,
     };
 
     // 두더지가 잡힌 이미지 리소스 ID 배열
     private int[] moleHurtImageIds = {
             R.drawable.mole_hurt,
-            R.drawable.mole_hurt,
-            R.drawable.mole_hurt
     };
 
     @Override
@@ -44,7 +42,8 @@ public class game_process extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_process);
 
-        moleImageView = findViewById(R.id.moleImageView);
+        moleImageView1 = findViewById(R.id.moleImageView1);
+        moleImageView2 = findViewById(R.id.moleImageView2);
         scoreTextView = findViewById(R.id.scoreTextView);
 
         // 제한 시간을 60초로 설정하는 카운트다운 타이머
@@ -69,7 +68,7 @@ public class game_process extends AppCompatActivity {
             }
         }, getRandomTime());
 
-        moleImageView.setOnTouchListener(new View.OnTouchListener() {
+        moleImageView1.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 // 터치 이벤트 처리
@@ -77,7 +76,44 @@ public class game_process extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         // 두더지를 터치했을 때의 동작을 여기에 구현
                         // 예를 들어, 두더지가 잡혔을 때 다른 이미지로 변경
-                        moleImageView.setImageResource(R.drawable.mole_hurt);
+                        moleImageView1.setImageResource(R.drawable.mole_hurt);
+
+                        // 두더지가 잡히면 100점 추가
+                        score += 100;
+
+                        // 두더지가 잡힌 횟수 증가
+                        moleCount++;
+
+                        // 점수를 업데이트
+                        updateScoreAndTime(60); // 남은 시간은 60초로 고정
+
+                        // 두더지가 잡힌 후 2초 동안 기다린 후 다시 숨게 설정
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                simulateMoleHiding();
+                            }
+                        }, 2000);
+
+                        // 만약 두더지를 10번 잡으면 게임 종료
+                        if (moleCount >= 10) {
+                            endGame();
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
+
+        moleImageView2.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // 터치 이벤트 처리
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // 두더지를 터치했을 때의 동작을 여기에 구현
+                        // 예를 들어, 두더지가 잡혔을 때 다른 이미지로 변경
+                        moleImageView2.setImageResource(R.drawable.mole_hurt);
 
                         // 두더지가 잡히면 100점 추가
                         score += 100;
@@ -132,9 +168,18 @@ public class game_process extends AppCompatActivity {
 
 
     private void showMoleImage() {
-        int randomImageIndex = getRandomImageIndex();
-        moleImageView.setImageResource(moleImageIds[randomImageIndex]);
-        moleImageView.setVisibility(View.VISIBLE);
+        int randomImageIndex1 = getRandomImageIndex();
+        int randomImageIndex2;
+
+        do {
+            randomImageIndex2 = getRandomImageIndex();
+        } while (randomImageIndex2 == randomImageIndex1);
+
+        moleImageView1.setImageResource(moleImageIds[randomImageIndex1]);
+        moleImageView1.setVisibility(View.VISIBLE);
+
+        moleImageView2.setImageResource(moleImageIds[randomImageIndex2]);
+        moleImageView2.setVisibility(View.VISIBLE);
 
         // 두더지가 나타나는 시간 간격을 2초로 설정
         handler.postDelayed(new Runnable() {
@@ -154,7 +199,8 @@ public class game_process extends AppCompatActivity {
     // 두더지 이미지를 숨기는 메서드
     private void hideMoleImage() {
         // 두더지 이미지를 숨기고 두더지가 잡힌 후 2초 동안 기다린 후 다시 나오게 설정
-        moleImageView.setVisibility(View.INVISIBLE);
+        moleImageView1.setVisibility(View.INVISIBLE);
+        moleImageView2.setVisibility(View.INVISIBLE);
 
         // 두더지가 잡힌 후 2초 동안 기다린 후 다시 나오게 설정
         handler.postDelayed(new Runnable() {
