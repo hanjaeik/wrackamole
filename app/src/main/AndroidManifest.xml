@@ -23,7 +23,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".game_process" />
+        <activity android:name=".game_selection" />
+        <activity android:name=".easy_gameprocess" />
+        <activity android:name=".middle_gameprocess"/>
+        <activity android:name=".advance_gameprocess"/>
         <activity android:name=".game_end" />
 
     </application>
