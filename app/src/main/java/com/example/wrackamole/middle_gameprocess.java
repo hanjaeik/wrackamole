@@ -59,7 +59,7 @@ public class middle_gameprocess extends AppCompatActivity {
 
         scoreTextView = findViewById(R.id.scoreTextView);
 
-        // 제한 시간을 60초로 설정하는 카운트다운 타이머
+        // 제한 시간을 45초로 설정하는 카운트다운 타이머
         new CountDownTimer(45000, 1000) {
             public void onTick(long millisUntilFinished) {
                 // 남은 시간을 초 단위로 표시

@@ -12,7 +12,7 @@ public class game_selection extends AppCompatActivity {
         setContentView(R.layout.game_selection);
 
         // 각 버튼에 클릭 리스너 추가
-        Button easyButton = findViewById(R.id.easyButton);
+        Button easyButton = findViewById(R.id.easyButton); //초급 난이도 화면으로 전환
         easyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -20,15 +20,15 @@ public class game_selection extends AppCompatActivity {
             }
         });
 
-        Button intermediateButton = findViewById(R.id.MiddleButton);
-        intermediateButton.setOnClickListener(new View.OnClickListener() {
+        Button MiddleButton = findViewById(R.id.MiddleButton); // 중간 난이도 화면으로 전환
+        MiddleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startGame(middle_gameprocess.class);
             }
         });
 
-        Button advancedButton = findViewById(R.id.advancedButton);
+        Button advancedButton = findViewById(R.id.advancedButton); // 고급 난이도 화면으로 전환
         advancedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
