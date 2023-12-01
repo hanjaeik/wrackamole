@@ -8,13 +8,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.Random;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class advance_gameprocess extends AppCompatActivity {
 
@@ -22,6 +21,9 @@ public class advance_gameprocess extends AppCompatActivity {
     private TextView scoreTextView;
     private int score = 0;
     private int moleCount = 0;
+    private int currentIndex = 0;
+    private boolean isMoleHurt = false;
+
     private Handler handler;
 
     {
@@ -59,20 +61,6 @@ public class advance_gameprocess extends AppCompatActivity {
 
         scoreTextView = findViewById(R.id.scoreTextView);
 
-        // 제한 시간을 30초로 설정하는 카운트다운 타이머
-        new CountDownTimer(30000, 1000) {
-            public void onTick(long millisUntilFinished) {
-                // 남은 시간을 초 단위로 표시
-                int secondsLeft = (int) (millisUntilFinished / 1000);
-                updateScoreAndTime(secondsLeft);
-            }
-
-            public void onFinish() {
-                // 게임 종료 시 동작
-                endGame();
-            }
-        }.start();
-
         // 초기에는 두더지가 나오기 전까지의 대기 시간을 설정
         handler.postDelayed(new Runnable() {
             @Override
@@ -81,25 +69,36 @@ public class advance_gameprocess extends AppCompatActivity {
             }
         }, getRandomDelay());
 
-
         for (final ImageView moleImageView : moleImageViews) {
             moleImageView.setOnTouchListener(new View.OnTouchListener() {
+                private boolean isMoleHurt = false; // 각각의 moleImageView에 대한 mole_hurt 상태 여부를 추적
+
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            moleImageView.setImageResource(R.drawable.mole_hurt);
-                            score += 100;
-                            moleCount++;
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    hideMoleImage();
-                                }
-                            }, 800);
+                            if (!isMoleHurt) {
+                                moleImageView.setImageResource(R.drawable.mole_hurt);
+                                moleImageView.setClickable(false); // 터치 이벤트 비활성화
+                                isMoleHurt = true; // mole_hurt 상태로 설정
 
-                            if (moleCount >= 18) {
-                                endGame();
+                                score += 100;
+                                updateScore(); // 수정된 부분
+
+                                moleCount++;
+
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        hideMoleImage();
+                                        isMoleHurt = false; // mole_hurt 상태 해제
+                                        moleImageView.setClickable(true); // 터치 이벤트 다시 활성화
+                                    }
+                                }, 1000);
+
+                                if (moleCount >= 20) {
+                                    endGame();
+                                }
                             }
                             break;
                     }
@@ -108,6 +107,7 @@ public class advance_gameprocess extends AppCompatActivity {
             });
         }
     }
+
     private void simulateMoleHiding() {
         showMoleImage();
     }
@@ -119,64 +119,77 @@ public class advance_gameprocess extends AppCompatActivity {
     }
 
     private void showMoleImage() {
-        List<Integer> moleImageIndexes = new ArrayList<>();
-        for (int i = 0; i < moleImageIds.length; i++) {
-            moleImageIndexes.add(i);
-        }
+        List<Integer> moleImageIndexes = getRandomImageIndexes(1); // 1개의 이미지를 랜덤으로 선택
         Collections.shuffle(moleImageIndexes);
 
-        for (int i = 0; i < moleImageViews.length; i++) {
+        int totalMoleCount = moleImageViews.length;
+        List<Integer> visibleIndexes = new ArrayList<>();
+
+        // 이미지를 랜덤으로 나타나게 하기
+        for (int i = 0; i < moleImageIndexes.size(); i++) {
             int randomImageIndex = moleImageIndexes.get(i);
             moleImageViews[i].setImageResource(moleImageIds[randomImageIndex]);
+            visibleIndexes.add(i);
 
-            // 랜덤한 딜레이를 주어 각 두더지가 랜덤한 순서로 나타나도록 함
             final int finalI = i;
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     moleImageViews[finalI].setVisibility(View.VISIBLE);
                 }
-            }, getRandomDelay());
+            }, 2000);
         }
-        // 일정 시간 후에 두더지 이미지를 숨기는 코드
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hideMoleImage();
-            }
-        }, 800);
+
     }
-
-
     private void hideMoleImage() {
         for (ImageView moleImageView : moleImageViews) {
-            moleImageView.setVisibility(View.INVISIBLE);
+            moleImageView.setImageResource(R.drawable.mole); // 두더지 이미지를 초기 상태로 설정
+            moleImageView.setVisibility(View.INVISIBLE); // 이미지를 숨김 처리
         }
 
+        // 랜덤한 위치에 두더지 이미지 나타내기
+        List<Integer> indexes = getRandomImageIndexes(1); // 3개의 이미지를 랜덤으로 선택
+        currentIndex = indexes.get(0);
+
+        moleImageViews[currentIndex].setVisibility(View.VISIBLE);
+
+        // 일정 시간 후에 두더지 이미지를 숨기는 코드
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 showMoleImage();
             }
-        }, 800);
+        }, 2000);
     }
 
-    private int getRandomImageIndex() {
-        Random random = new Random();
-        return random.nextInt(moleImageIds.length);
+    private List<Integer> getRandomImageIndexes(int count) {
+        List<Integer> randomIndexes = new ArrayList<>();
+        List<Integer> availableIndexes = new ArrayList<>();
+        for (int i = 0; i < moleImageIds.length; i++) {
+            availableIndexes.add(i);
+        }
+        Collections.shuffle(availableIndexes);
+
+        for (int i = 0; i < count; i++) {
+            if (i < availableIndexes.size()) {
+                randomIndexes.add(availableIndexes.get(i));
+            }
+        }
+
+        return randomIndexes;
     }
 
-    private void updateScoreAndTime(final int secondsLeft) {
+    private void updateScore() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                scoreTextView.setText("Score: " + score + " | Time: " + secondsLeft + "s");
+                scoreTextView.setText("Score: " + score);
             }
         });
     }
 
     private int getRandomDelay() {
         Random random = new Random();
-        return random.nextInt(1000) + 500;
+        return random.nextInt(500) + 1000; // 예시로 1000에서 3000까지의 범위로 수정
     }
 }
