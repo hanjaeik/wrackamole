@@ -3,8 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@drawable/img_2"
     tools:context=".easy_gameprocess">
+
+    <!-- 첫번째 -->
+    <TextView
+        android:id="@+id/moleTextView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="120dp"
+        android:text="여기지롱!"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/moleImageView1"
@@ -24,6 +37,19 @@
         android:layout_marginTop="150dp"
         android:src="@drawable/mole_empty" />
 
+    <!-- 두번째 -->
+
+    <TextView
+        android:id="@+id/moleTextView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="여기지롱!"
+        android:layout_marginTop="120dp"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:visibility="invisible" />
+
     <ImageView
         android:id="@+id/moleImageView2"
         android:layout_width="wrap_content"
@@ -40,6 +66,20 @@
         android:layout_centerHorizontal="true"
         android:src="@drawable/mole_empty" />
 
+    <!-- 세번째 -->
+
+    <TextView
+        android:id="@+id/moleTextView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="여기지롱!"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="120dp"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:visibility="invisible" />
+
     <ImageView
         android:id="@+id/moleImageView3"
         android:layout_width="wrap_content"
@@ -50,6 +90,7 @@
         android:src="@drawable/mole3"
         android:visibility="invisible" />
 
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,6 +98,20 @@
         android:layout_marginRight="13dp"
         android:layout_marginTop="150dp"
         android:src="@drawable/mole_empty" />
+
+    <!-- 네번째 -->
+
+    <TextView
+        android:id="@+id/moleTextView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="여기지롱!"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="320dp"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/moleImageView4"
@@ -76,6 +131,19 @@
         android:layout_marginTop="350dp"
         android:src="@drawable/mole_empty" />
 
+    <!-- 다섯번째 -->
+
+    <TextView
+        android:id="@+id/moleTextView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="여기지롱!"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="320dp"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:visibility="invisible" />
+
     <ImageView
         android:id="@+id/moleImageView5"
         android:layout_width="wrap_content"
@@ -91,6 +159,20 @@
         android:layout_marginTop="350dp"
         android:layout_centerHorizontal="true"
         android:src="@drawable/mole_empty" />
+
+    <!-- 여섯번째 -->
+
+    <TextView
+        android:id="@+id/moleTextView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="여기지롱!"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="320dp"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/moleImageView6"
@@ -109,6 +191,20 @@
         android:layout_marginRight="13dp"
         android:layout_marginTop="350dp"
         android:src="@drawable/mole_empty" />
+
+    <!-- 일곱번째 -->
+
+    <TextView
+        android:id="@+id/moleTextView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="여기지롱!"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="520dp"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:visibility="invisible" />
 
 
     <ImageView
@@ -129,6 +225,19 @@
         android:layout_marginTop="550dp"
         android:src="@drawable/mole_empty" />
 
+    <!-- 여덟번째 -->
+
+    <TextView
+        android:id="@+id/moleTextView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="여기지롱!"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="520dp"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:visibility="invisible" />
+
     <ImageView
         android:id="@+id/moleImageView8"
         android:layout_width="wrap_content"
@@ -144,6 +253,20 @@
         android:layout_marginTop="550dp"
         android:layout_centerHorizontal="true"
         android:src="@drawable/mole_empty" />
+
+    <!-- 아홉번째 -->
+
+    <TextView
+        android:id="@+id/moleTextView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="여기지롱!"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="520dp"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/moleImageView9"
@@ -163,6 +286,8 @@
         android:layout_marginTop="550dp"
         android:src="@drawable/mole_empty" />
 
+    <!-- 점수 -->
+
     <TextView
         android:id="@+id/scoreTextView"
         android:layout_width="wrap_content"
@@ -171,13 +296,13 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:text="Score: 0 | Time: 60s"
+        android:text="Score: 0"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         android:textStyle="bold" />
 
 
-    </RelativeLayout>
+</RelativeLayout>
 
     <!-- 기타 게임 진행 시 표시할 UI를 추가할 수 있습니다. -->
 
